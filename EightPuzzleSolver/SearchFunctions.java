@@ -75,15 +75,15 @@ public class SearchFunctions {
         return executionTimeDouble;
     }
 
-    public static void displaySearchPath(Node goalNode) { // show all consecutive steps to solving a puzzle
+    public static int displaySearchPath(Node goalNode) { // show all consecutive steps to solving a puzzle
         Stack<Node> path = new Stack<>(); // create stack to get correct path order
 
         Node currentNode = goalNode;
 
         path.push(currentNode); // push goal node to stack, it will be the last in the path
 
-        while (currentNode.parent != null) { // traverse to root node from goal node
-            currentNode = currentNode.parent; // move up a node
+        while (currentNode.getParent() != null) { // traverse to root node from goal node
+            currentNode = currentNode.getParent(); // move up a node
             path.push(currentNode); // push node to stack
         }
 
@@ -97,12 +97,14 @@ public class SearchFunctions {
             }
 
             currentNode = path.pop(); // get top node of the stack
-            Puzzle.displayPuzzle(currentNode.state); // display the top node
+            Puzzle.displayPuzzle(currentNode.getPuzzleState()); // display the top node
 
             System.out.println();
 
             step++; // increase step counter
         }
+
+        return step - 1;
 
     }
 
@@ -112,7 +114,7 @@ public class SearchFunctions {
         HashMap<String, Node> visited = new HashMap<>(); // hashmap to keep track of visited nodes
         // priority queue sorts nodes based on int value of g cost + h cost
         PriorityQueue<Node> frontier = new PriorityQueue<>(
-                Comparator.comparingInt(n -> n.costToNode + n.heuristicValue));
+                Comparator.comparingInt(n -> n.getFCost()));
 
         int rootHeuristic = heuristic.calculate(puzzle); // get heuristic of root
 
@@ -123,26 +125,26 @@ public class SearchFunctions {
         while (!frontier.isEmpty()) { // iterate through frontier nodes from least to greatest cost
             Node currentNode = frontier.poll();
 
-            String stateString = Puzzle.stringifyPuzzle(currentNode.state); // convert puzzle to stirng
+            String stateString = Puzzle.stringifyPuzzle(currentNode.getPuzzleState()); // convert puzzle to stirng
 
             if (stateString.equals("012345678")) { // found goal node
-                System.out.println("Search Cost: " + searchCost); // output search cost
+                currentNode.searchCost = searchCost; // store searchCost in the node
 
                 return currentNode; // return goal node
             }
 
             visited.put(stateString, currentNode); // mark current node as visited
 
-            ArrayList<ArrayList<Integer>> neighborsArrayList = getNeighbors(currentNode.state);
+            ArrayList<ArrayList<Integer>> neighborsArrayList = getNeighbors(currentNode.getPuzzleState());
 
             for (ArrayList<Integer> neighbor : neighborsArrayList) { // for each neighbor of currentNode
                 int neighborHeuristic = heuristic.calculate(neighbor); // get heuristic of neighbor
-                int costToNeighbor = currentNode.costToNode + 1; // cost to neighbor is +1 of currentNode
+                int costToNeighbor = currentNode.getGCost() + 1; // cost to neighbor is +1 of currentNode
                 // create a node for the neighbor
                 Node neighborNode = new Node(neighbor, neighborHeuristic, costToNeighbor, currentNode);
                 // convert neighbor puzzle to string to check if stirng exists in visited
                 // dicitonary
-                String neighborStateString = Puzzle.stringifyPuzzle(neighborNode.state);
+                String neighborStateString = Puzzle.stringifyPuzzle(neighborNode.getPuzzleState());
 
                 if (!visited.containsKey(neighborStateString)) { // if nieghbor node has not been visited
                     frontier.add(neighborNode); // add neighbor to the frontier
