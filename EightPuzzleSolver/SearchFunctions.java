@@ -91,18 +91,16 @@ public class SearchFunctions {
 
         while (!path.empty()) {
             if (step == 0) {
-                // System.out.println("Puzzle: "); // step zero is to display entered puzzle
-                // sdfsdfs
+                System.out.println("Puzzle: "); // step zero is to display entered puzzle
 
             } else {
-                // System.out.println("Step " + step + ": "); sdfsdfsdsdfs
+                System.out.println("Step " + step + ": ");
             }
 
             currentNode = path.pop(); // get top node of the stack
-            // Puzzle.displayPuzzle(currentNode.getPuzzleState()); // display the top node
-            // sfdsfsdf
+            Puzzle.displayPuzzle(currentNode.getPuzzleState()); // display the top node
 
-            // System.out.println(); sdfsfsfs
+            System.out.println();
 
             step++; // increase step counter
         }
