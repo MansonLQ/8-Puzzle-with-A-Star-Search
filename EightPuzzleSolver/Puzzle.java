@@ -97,4 +97,25 @@ public class Puzzle {
         }
         return inversionCount % 2 == 0; // even number of inversions mean puzzle can be solved
     }
+
+    public static void generateDepthPuzzles(int depth, int total) {
+        int count = 0; // generate x amount of puzzles with a specific solution depth
+        while (count < total) {
+            ArrayList<Integer> puzzle = randomPuzzle(); // get a random puzzle
+
+            Node goalNode = SearchFunctions.searchAStar(puzzle, HeuristicFunctions::h1);
+            int solutionDepth = SearchFunctions.displaySearchPath(goalNode); // collect solution depth
+
+            while (solutionDepth != depth) { // if the solution depth is desired
+                puzzle = randomPuzzle(); // create a new random puzzle and get its solution depth
+                goalNode = SearchFunctions.searchAStar(puzzle, HeuristicFunctions::h1);
+                solutionDepth = SearchFunctions.displaySearchPath(goalNode);
+
+            }
+
+            System.out.println(stringifyPuzzle(puzzle)); // display the puzzle in a concise string
+            count++; // increase count to generate the next valid puzzle
+        }
+
+    }
 }

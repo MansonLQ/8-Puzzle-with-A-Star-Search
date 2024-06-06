@@ -23,7 +23,7 @@ public class Main {
             puzzle = Puzzle.randomPuzzle();
         } else if (inputMethod == 2) {
             puzzle = Puzzle.manualPuzzle(scan); // input random puzzle
-        } else {
+        } else if (inputMethod == 3) {
             scan.close();
             String[] files = { "Length4.txt", "Length8.txt", "Length12.txt", "Length16.txt", "Length20.txt" };
             // read each file
@@ -38,6 +38,10 @@ public class Main {
                 solutionDepth += 4;
             }
 
+            return;
+        } else {
+            scan.close();
+            Puzzle.generateDepthPuzzles(20, 90);
             return;
         }
 
@@ -69,7 +73,7 @@ public class Main {
             try (BufferedReader br = new BufferedReader(new FileReader(file))) {
                 String line;
                 while ((line = br.readLine()) != null) {
-                    String[] parts = line.split(" "); // convert each line to an ArrayList puzzle
+                    String[] parts = line.split(""); // convert each line to an ArrayList puzzle
                     ArrayList<Integer> puzzle = new ArrayList<>();
                     for (String part : parts) {
                         puzzle.add(Integer.parseInt(part)); // add puzzle tile into an ArrayList
